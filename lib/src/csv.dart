@@ -4,7 +4,7 @@ part of '../table_parser.dart';
 class CsvDecoder extends TableParser {
   @override
   String get mediaType => 'text/csv';
-  
+
   @override
   String get extension => '.csv';
 
@@ -54,19 +54,19 @@ class CsvDecoder extends TableParser {
     }
 
     var lines = _csvContent.split(RegExp(r'\r?\n'));
-    
+
     for (var line in lines) {
       if (line.trim().isEmpty) continue;
-      
+
       var row = <dynamic>[];
       var fields = _parseCSVLine(line);
-      
+
       for (var field in fields) {
         var value = _parseValue(field);
         row.add(value);
         _countFilledColumn(table, row, value);
       }
-      
+
       table.rows.add(row);
       _countFilledRow(table, row);
     }
@@ -111,11 +111,11 @@ class CsvDecoder extends TableParser {
 
   dynamic _parseValue(String value) {
     // Remove text delimiters if present
-    if (_textDelimiter != null && 
-        value.startsWith(_textDelimiter!) && 
+    if (_textDelimiter != null &&
+        value.startsWith(_textDelimiter!) &&
         value.endsWith(_textEndDelimiter!)) {
-      value = value.substring(_textDelimiter!.length, 
-                             value.length - _textEndDelimiter!.length);
+      value = value.substring(
+          _textDelimiter!.length, value.length - _textEndDelimiter!.length);
     }
 
     if (!_shouldParseNumbers || value.isEmpty) {
@@ -139,7 +139,7 @@ class CsvDecoder extends TableParser {
     if (!_tables.containsKey(sheet)) {
       throw ArgumentError("'$sheet' not found");
     }
-    
+
     var table = _tables[sheet]!;
     if (columnIndex < 0 || columnIndex > table._maxCols) {
       throw RangeError.range(columnIndex, 0, table._maxCols);
@@ -160,7 +160,7 @@ class CsvDecoder extends TableParser {
     if (!_tables.containsKey(sheet)) {
       throw ArgumentError("'$sheet' not found");
     }
-    
+
     var table = _tables[sheet]!;
     if (columnIndex < 0 || columnIndex >= table._maxCols) {
       throw RangeError.range(columnIndex, 0, table._maxCols - 1);
@@ -181,7 +181,7 @@ class CsvDecoder extends TableParser {
     if (!_tables.containsKey(sheet)) {
       throw ArgumentError("'$sheet' not found");
     }
-    
+
     var table = _tables[sheet]!;
     if (rowIndex < 0 || rowIndex > table._maxRows) {
       throw RangeError.range(rowIndex, 0, table._maxRows);
@@ -200,7 +200,7 @@ class CsvDecoder extends TableParser {
     if (!_tables.containsKey(sheet)) {
       throw ArgumentError("'$sheet' not found");
     }
-    
+
     var table = _tables[sheet]!;
     if (rowIndex < 0 || rowIndex >= table._maxRows) {
       throw RangeError.range(rowIndex, 0, table._maxRows - 1);
@@ -219,7 +219,7 @@ class CsvDecoder extends TableParser {
     if (!_tables.containsKey(sheet)) {
       throw ArgumentError("'$sheet' not found");
     }
-    
+
     var table = _tables[sheet]!;
     if (columnIndex < 0 || columnIndex >= table._maxCols) {
       throw RangeError.range(columnIndex, 0, table._maxCols - 1);
@@ -243,17 +243,17 @@ class CsvDecoder extends TableParser {
       var row = table.rows[i];
       for (var j = 0; j < row.length; j++) {
         if (j > 0) buffer.write(_separator);
-        
+
         var value = row[j]?.toString() ?? '';
-        
+
         // Add text delimiters if needed
-        if (_textDelimiter != null && 
-            (value.contains(_separator) || 
-             value.contains('\n') || 
-             value.contains('\r') ||
-             value.contains(_textDelimiter!))) {
-          value = value.replaceAll(_textDelimiter!, 
-                                  _textDelimiter! + _textDelimiter!);
+        if (_textDelimiter != null &&
+            (value.contains(_separator) ||
+                value.contains('\n') ||
+                value.contains('\r') ||
+                value.contains(_textDelimiter!))) {
+          value = value.replaceAll(
+              _textDelimiter!, _textDelimiter! + _textDelimiter!);
           buffer.write(_textDelimiter! + value + _textEndDelimiter!);
         } else {
           buffer.write(value);

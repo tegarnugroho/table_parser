@@ -1,10 +1,8 @@
 @TestOn('vm')
-
-library table_parser_test;
+library io_test;
 
 import 'package:test/test.dart';
-
-import 'html_test.dart';
+import 'common.dart';
 
 void main() {
   testUnsupported();

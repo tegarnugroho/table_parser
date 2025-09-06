@@ -1,15 +1,15 @@
 name: table_parser
 description: A lightweight library for parsing and updating table documents (CSV, ODS, XLSX). Extended version of spreadsheet_decoder with enhanced features.
-version: 1.0.0
-homepage: https://github.com/sestegra/table_parser
+version: 1.0.1
+homepage: https://github.com/tegarnugroho/table_parser
 
 environment:
   sdk: "^3.0.0"
 
 dependencies:
-  archive: ^3.6.1
-  xml: ^6.5.0
-  path: ^1.9.0
+  archive: ^4.0.7
+  xml: ^6.6.1
+  path: ^1.9.1
 
 dev_dependencies:
   lints: ^4.0.0

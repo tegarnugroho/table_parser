@@ -12,7 +12,8 @@ String readBase64(String filename) {
 }
 
 TableParser decode(String filename, {bool update = false}) {
-  return TableParser.decodeBytes(_readBytes(filename), update: update, verify: true);
+  return TableParser.decodeBytes(_readBytes(filename),
+      update: update, verify: true);
 }
 
 void save(String file, List<int> data) {

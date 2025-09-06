@@ -71,9 +71,9 @@ abstract class TableParser {
     return _newTableParser(archive, update);
   }
 
-  factory TableParser.decodeBuffer(InputStreamBase input,
+  factory TableParser.decodeBuffer(InputStream input,
       {bool update = false, bool verify = false}) {
-    var archive = ZipDecoder().decodeBuffer(input, verify: verify);
+    var archive = ZipDecoder().decodeBytes(input.toUint8List(), verify: verify);
     return _newTableParser(archive, update);
   }
 
@@ -206,7 +206,7 @@ abstract class TableParser {
       var content = utf8.encode(xml);
       _archiveFiles[xmlFile] = ArchiveFile(xmlFile, content.length, content);
     }
-    return ZipEncoder().encode(_cloneArchive(_archive)) as List<int>;
+    return ZipEncoder().encode(_cloneArchive(_archive));
   }
 
   /// Encode data url
@@ -225,10 +225,8 @@ abstract class TableParser {
         if (_archiveFiles.containsKey(file.name)) {
           copy = _archiveFiles[file.name]!;
         } else {
-          var content = file.content as Uint8List;
-          var compress = file.compress;
-          copy = ArchiveFile(file.name, content.length, content)
-            ..compress = compress;
+          var content = file.content;
+          copy = ArchiveFile(file.name, content.length, content);
         }
         clone.addFile(copy);
       }

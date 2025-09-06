@@ -29,11 +29,15 @@ final Map<String, String> files = {
 };
 
 String readBase64(String filename) {
+  if (!files.containsKey(filename)) {
+    throw Exception('File not found in test/common_html.dart: $filename');
+  }
   return files[filename]!;
 }
 
 TableParser decode(String filename, {bool update = false}) {
-  return TableParser.decodeBytes(Base64Decoder().convert(readBase64(filename)), update: update);
+  return TableParser.decodeBytes(Base64Decoder().convert(readBase64(filename)),
+      update: update);
 }
 
 void save(String file, List<int> data) {}

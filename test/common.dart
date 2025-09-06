@@ -1,4 +1,9 @@
-part of 'html_test.dart';
+import 'dart:convert';
+import 'package:test/test.dart';
+import 'package:table_parser/table_parser.dart';
+
+// Import platform-specific functions
+import 'common_html.dart' if (dart.library.io) 'common_io.dart';
 
 var expectedTest = <String, List<List>>{
   'ONE': [
@@ -327,7 +332,7 @@ void testXlsx() {
       expect(decoder.tables.length, expectedNoPhonetics.keys.length);
       decoder.tables.forEach((name, table) {
         expect(table.rows, expectedNoPhonetics[name]);
-      });      
+      });
     });
   });
 }
@@ -345,61 +350,63 @@ void testCsv() {
     test('Simple CSV parsing', () {
       var csvContent = 'Name,Age,City\nJohn,30,NYC\nJane,25,LA';
       var decoder = TableParser.decodeCsv(csvContent);
-      
+
       expect(decoder.tables.length, 1);
       expect(decoder.tables.containsKey('Sheet1'), isTrue);
-      
+
       var table = decoder.tables['Sheet1']!;
       expect(table.maxRows, 3);
       expect(table.maxCols, 3);
-      
+
       var expectedRows = [
         ['Name', 'Age', 'City'],
         ['John', 30, 'NYC'],
         ['Jane', 25, 'LA']
       ];
-      
+
       expect(table.rows, expectedRows);
     });
 
     test('CSV with quoted values', () {
-      var csvContent = '"Name","Age","City"\n"John, Jr",30,"New York"\n"Jane",25,"Los Angeles"';
+      var csvContent =
+          '"Name","Age","City"\n"John, Jr",30,"New York"\n"Jane",25,"Los Angeles"';
       var decoder = TableParser.decodeCsv(csvContent, textDelimiter: '"');
-      
+
       var table = decoder.tables['Sheet1']!;
       var expectedRows = [
         ['Name', 'Age', 'City'],
         ['John, Jr', 30, 'New York'],
         ['Jane', 25, 'Los Angeles']
       ];
-      
+
       expect(table.rows, expectedRows);
     });
 
     test('CSV with escaped quotes', () {
-      var csvContent = 'Name,Description\n"John ""Jr"" Doe","He said ""Hello"""';
+      var csvContent =
+          'Name,Description\n"John ""Jr"" Doe","He said ""Hello"""';
       var decoder = TableParser.decodeCsv(csvContent, textDelimiter: '"');
-      
+
       var table = decoder.tables['Sheet1']!;
       var expectedRows = [
         ['Name', 'Description'],
         ['John "Jr" Doe', 'He said "Hello"']
       ];
-      
+
       expect(table.rows, expectedRows);
     });
 
     test('CSV with custom separator', () {
       var csvContent = 'Name;Age;City\nJohn;30;NYC\nJane;25;LA';
       var decoder = TableParser.decodeCsv(csvContent, separator: ';');
-      
+
       var table = decoder.tables['Sheet1']!;
       var expectedRows = [
         ['Name', 'Age', 'City'],
         ['John', 30, 'NYC'],
         ['Jane', 25, 'LA']
       ];
-      
+
       expect(table.rows, expectedRows);
     });
 
@@ -407,34 +414,35 @@ void testCsv() {
       var csvContent = 'Name,Age,City\nJohn,30,NYC\nJane,25,LA';
       var bytes = utf8.encode(csvContent);
       var decoder = TableParser.decodeCsvBytes(bytes);
-      
+
       var table = decoder.tables['Sheet1']!;
       var expectedRows = [
         ['Name', 'Age', 'City'],
         ['John', 30, 'NYC'],
         ['Jane', 25, 'LA']
       ];
-      
+
       expect(table.rows, expectedRows);
     });
 
     test('CSV without number parsing', () {
       var csvContent = 'Name,Age,ID\nJohn,30,001\nJane,25,002';
-      var decoder = TableParser.decodeCsv(csvContent, shouldParseNumbers: false);
-      
+      var decoder =
+          TableParser.decodeCsv(csvContent, shouldParseNumbers: false);
+
       var table = decoder.tables['Sheet1']!;
       var expectedRows = [
         ['Name', 'Age', 'ID'],
         ['John', '30', '001'],
         ['Jane', '25', '002']
       ];
-      
+
       expect(table.rows, expectedRows);
     });
 
     test('Empty CSV', () {
       var decoder = TableParser.decodeCsv('');
-      
+
       expect(decoder.tables.length, 1);
       var table = decoder.tables['Sheet1']!;
       expect(table.maxRows, 0);
@@ -445,14 +453,14 @@ void testCsv() {
     test('CSV update functionality', () {
       var csvContent = 'Name,Age\nJohn,30\nJane,25';
       var decoder = TableParser.decodeCsv(csvContent, update: true);
-      
+
       // Update a cell
       decoder.updateCell('Sheet1', 1, 1, 31);
-      
+
       // Encode back to check the update
       var encodedBytes = decoder.encode();
       var newContent = utf8.decode(encodedBytes);
-      
+
       expect(newContent.contains('31'), isTrue);
     });
   });
