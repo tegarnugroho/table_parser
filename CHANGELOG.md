@@ -1,5 +1,17 @@
 # Changelog
 
+## 1.0.2
+
+### Improvements
+
+- Updated dependencies to latest stable versions:
+  - `xml: ^7.0.1` (was `^6.6.1`)
+  - `lints: ^6.1.0` (was `^4.0.0`)
+- Migrated deprecated `xml` package APIs:
+  - Replaced deprecated `XmlName(...)` constructor with `XmlName.qualified(...)`
+  - Replaced deprecated `namespace` argument in `getAttribute` with `namespaceUri`
+- Removed redundant library names in accordance with modern Dart linter rules (`unnecessary_library_name`)
+
 ## 1.0.1
 
 ### Bug Fixes

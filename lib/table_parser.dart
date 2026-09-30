@@ -1,4 +1,4 @@
-library table_parser;
+library;
 
 import 'dart:convert';
 

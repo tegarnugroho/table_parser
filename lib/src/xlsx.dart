@@ -315,7 +315,7 @@ class XlsxDecoder extends TableParser {
   void _parseTable(XmlElement node) {
     var name = node.getAttribute('name')!;
     var target =
-        _worksheetTargets[node.getAttribute('id', namespace: _relationships)]!;
+        _worksheetTargets[node.getAttribute('id', namespaceUri: _relationships)]!;
     var table = tables[name] = TableSheet(name);
 
     final namePath =
@@ -526,9 +526,9 @@ class XlsxDecoder extends TableParser {
 
   static XmlElement _createRow(int rowIndex) {
     var attributes = <XmlAttribute>[
-      XmlAttribute(XmlName('r'), (rowIndex + 1).toString()),
+      XmlAttribute(XmlName.qualified('r'), (rowIndex + 1).toString()),
     ];
-    return XmlElement(XmlName('row'), attributes, []);
+    return XmlElement(XmlName.qualified('row'), attributes, []);
   }
 
   static XmlElement _insertRow(
@@ -569,16 +569,16 @@ class XlsxDecoder extends TableParser {
   static XmlElement _createCell(int columnIndex, int rowIndex, dynamic value) {
     var attributes = <XmlAttribute>[
       XmlAttribute(
-          XmlName('r'), '${numericToLetters(columnIndex + 1)}${rowIndex + 1}'),
-      XmlAttribute(XmlName('t'), 'inlineStr'),
+          XmlName.qualified('r'), '${numericToLetters(columnIndex + 1)}${rowIndex + 1}'),
+      XmlAttribute(XmlName.qualified('t'), 'inlineStr'),
     ];
     var children = value == null
         ? <XmlElement>[]
         : <XmlElement>[
-            XmlElement(XmlName('is'), [], [
-              XmlElement(XmlName('t'), [], [XmlText(value.toString())])
+            XmlElement(XmlName.qualified('is'), [], [
+              XmlElement(XmlName.qualified('t'), [], [XmlText(value.toString())])
             ]),
           ];
-    return XmlElement(XmlName('c'), attributes, children);
+    return XmlElement(XmlName.qualified('c'), attributes, children);
   }
 }

@@ -1,5 +1,5 @@
 @TestOn('browser')
-library html_test;
+library;
 
 import 'package:test/test.dart';
 import 'common.dart';

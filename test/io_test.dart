@@ -1,5 +1,5 @@
 @TestOn('vm')
-library io_test;
+library;
 
 import 'package:test/test.dart';
 import 'common.dart';
